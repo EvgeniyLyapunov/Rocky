@@ -3,8 +3,9 @@
 <div class="border border-success p-2">
 
     <div class="container">
-        <h2 class="text-success p-2">Create Application Type</h2>
-        <form method="post" asp-action="Create">
+        <h2 class="text-success p-2">Edit Application Type</h2>
+        <form method="post">
+            <input asp-for="Id" hidden/>
             <div class="row">
                 <div class="col-8">
                     <div class="form-group row">
@@ -19,7 +20,7 @@
                     <div class="form-group row">
                         <div class="col-8 offset-4 row">
                             <div class="col">
-                                <input type="submit" class="btn btn-info w-100" value="Create" />
+                                <input type="submit" class="btn btn-info w-100" value="Update" />
                             </div>
                             <div class="col">
                                 <a asp-action="Index" class="btn btn-success w-100"><i class="fa-sharp fa-solid fa-right-from-bracket"></i> &nbsp; 
@@ -38,3 +39,4 @@
 @section Scripts {
     @{<partial name = "_ValidationScriptsPartial"/>}
 }
+
