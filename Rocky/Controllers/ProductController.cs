@@ -27,7 +27,8 @@ namespace Rocky.Controllers
             IEnumerable<Product> objList = _db.Product;
             foreach(Product obj in objList)
             {
-                obj.Category = _db.Category.FirstOrDefault(u => u.Id == obj.Id);
+                obj.Category = _db.Category.FirstOrDefault(u => u.Id == obj.CategoryId);
+                obj.ApplicationType = _db.ApplicationType.FirstOrDefault(u => u.Id == obj.ApplicationTypeId);
             }
             return View(objList);
         }
@@ -49,6 +50,11 @@ namespace Rocky.Controllers
             {
                 Product = new Product(),
                 CategorySelectList = _db.Category.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                }),
+                ApplicationTypeSelectList = _db.ApplicationType.Select(i => new SelectListItem
                 {
                     Text = i.Name,
                     Value = i.Id.ToString()
@@ -128,12 +134,15 @@ namespace Rocky.Controllers
                     _db.Product.Update(productVM.Product);
                 }
 
-
-
                 _db.SaveChanges();
                 return RedirectToAction("Index");
             }
             productVM.CategorySelectList = _db.Category.Select(i => new SelectListItem
+            {
+                Text = i.Name,
+                Value = i.Id.ToString()
+            });
+            productVM.ApplicationTypeSelectList = _db.ApplicationType.Select(i => new SelectListItem
             {
                 Text = i.Name,
                 Value = i.Id.ToString()
@@ -148,7 +157,7 @@ namespace Rocky.Controllers
             {
                 return NotFound();
             }
-            var obj = _db.Category.Find(id);
+            var obj = _db.Product.Find(id);
             if (obj == null)
             {
                 return NotFound();
@@ -162,13 +171,19 @@ namespace Rocky.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeletePost(int? id)
         {
-            var obj = _db.Category.Find(id);
+            var obj = _db.Product.Find(id);
             if(obj == null)
             {
                 return NotFound();
             }
+            string imgPath = _webHostEnvironment.WebRootPath + WC.ImagePath;
+            var oldFile = Path.Combine(imgPath, obj.Image);
+            if (System.IO.File.Exists(oldFile))
+            {
+                System.IO.File.Delete(oldFile);
+            }
 
-            _db.Category.Remove(obj);
+            _db.Product.Remove(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
