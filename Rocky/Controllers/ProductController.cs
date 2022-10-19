@@ -24,12 +24,12 @@ namespace Rocky.Controllers
         }
         public IActionResult Index()
         {
-            IEnumerable<Product> objList = _db.Product;
-            foreach(Product obj in objList)
-            {
-                obj.Category = _db.Category.FirstOrDefault(u => u.Id == obj.CategoryId);
-                obj.ApplicationType = _db.ApplicationType.FirstOrDefault(u => u.Id == obj.ApplicationTypeId);
-            }
+            IEnumerable<Product> objList = _db.Product.Include(u => u.Category).Include(u => u.ApplicationType);
+            //foreach(Product obj in objList)
+            //{
+            //    obj.Category = _db.Category.FirstOrDefault(u => u.Id == obj.CategoryId);
+            //    obj.ApplicationType = _db.ApplicationType.FirstOrDefault(u => u.Id == obj.ApplicationTypeId);
+            //}
             return View(objList);
         }
 
